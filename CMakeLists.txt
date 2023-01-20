@@ -25,10 +25,5 @@ target_link_libraries(
 	${PROJECT_NAME}
 PUBLIC
 	lib
-	sfml-graphics
-	sfml-audio
-	sfml-window
-	sfml-system
-	sfml-network
 )
 
