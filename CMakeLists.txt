@@ -12,6 +12,8 @@ set(SOURCES
 set(HEADERS
 )
 
+find_package(SFML 2.5 COMPONENTS graphics audio window system network REQUIRED)
+
 add_subdirectory(src)
 
 add_executable(${PROJECT_NAME}
@@ -23,5 +25,10 @@ target_link_libraries(
 	${PROJECT_NAME}
 PUBLIC
 	lib
+	sfml-graphics
+	sfml-audio
+	sfml-window
+	sfml-system
+	sfml-network
 )
 
