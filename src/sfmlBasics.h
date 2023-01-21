@@ -2,6 +2,7 @@
 
 #include "Hero.hpp"
 #include "Enemy.hpp"
+#include "Rocket.hpp"
 
 #include <iostream>
 #include <memory>
@@ -26,4 +27,5 @@ void draw();
 void updateInput();
 void update(float dt);
 void spawnEnemy();
+void shoot();
 

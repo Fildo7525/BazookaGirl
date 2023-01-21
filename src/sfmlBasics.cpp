@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <memory>
 
 sf::Vector2f viewSize(1024, 768);
 sf::VideoMode vm(viewSize.x, viewSize.y);
@@ -14,6 +15,7 @@ sf::Sprite bgSprite;
 
 std::shared_ptr<Hero> hero;
 std::vector<std::shared_ptr<Enemy>> enemies;
+std::vector<std::shared_ptr<Rocket>> rockets;
 
 float currentTime{};
 float prevTime = 0.0f;
@@ -40,6 +42,13 @@ void draw()
 	for(auto enemy : enemies) {
 		window.draw(enemy->getSprite());
 	}
+
+	if (rockets.size() > 0) {
+		for(auto rocket : rockets) {
+			// std::cout << "Drawing rocket at position [" << rocket->getSprite().getPosition().x << ", " << rocket->getSprite().getPosition().y << "]\n";
+			window.draw(rocket->getSprite());
+		}
+	}
 }
 
 void updateInput()
@@ -49,6 +58,9 @@ void updateInput()
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::W) {
 				hero->jump(750);
+			}
+			if (event.key.code == sf::Keyboard::Space) {
+				shoot();
 			}
 		}
 		if (event.type == sf::Event::Closed
@@ -68,11 +80,20 @@ void update(float dt)
 		prevTime = currentTime;
 	}
 
-	for(int i = 0; i != enemies.size(); i++) {
+	for(int i = 0; i < enemies.size(); i++) {
 		auto enemy = enemies[i];
 		enemy->update(dt);
 		if (enemy->getSprite().getPosition().x < 0) {
 			enemies.erase(enemies.begin() + i);
+		}
+	}
+
+	for(int i = 0; i < rockets.size(); i++) {
+		auto rocket = rockets[i];
+		rocket->update(dt);
+
+		if (rocket->getSprite().getPosition().x >= viewSize.x) {
+			rockets.erase(rockets.begin() + i);
 		}
 	}
 }
@@ -98,5 +119,10 @@ void spawnEnemy()
 			break;
 	}
 	enemies.push_back(std::make_shared<Enemy>("../Assets/graphics/enemy.png", enemyPos, speed));
+}
+
+void shoot()
+{
+	rockets.push_back(std::make_shared<Rocket>("../Assets/graphics/rocket.png", hero->getSprite().getPosition(), 400));
 }
 
