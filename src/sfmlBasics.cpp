@@ -1,5 +1,6 @@
 #include "sfmlBasics.h"
 
+#include <SFML/Audio/Music.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -29,6 +30,8 @@ std::vector<std::shared_ptr<Rocket>> rockets;
 float currentTime{};
 float prevTime = 0.0f;
 
+sf::Music bgMusic;
+
 void init()
 {
 	skyTexture.loadFromFile("../Assets/graphics/sky.png");
@@ -47,6 +50,11 @@ void init()
 	heading.setPosition({viewSize.x/2.f, viewSize.y*0.1f});
 
 	hero = std::make_shared<Hero>("../Assets/graphics/hero.png", sf::Vector2f(viewSize.x* 0.25, viewSize.y *0.5), 200);
+
+	bgMusic.openFromFile("../Assets/audio/bgMusic.ogg");
+	bgMusic.play();
+	bgMusic.setVolume(30);
+	bgMusic.setLoop(true);
 
 	std::srand((int)time(NULL));
 	spawnEnemy();
