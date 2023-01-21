@@ -28,4 +28,5 @@ void updateInput();
 void update(float dt);
 void spawnEnemy();
 void shoot();
+bool checkColision(const sf::Sprite lhs, const sf::Sprite &rhs);
 

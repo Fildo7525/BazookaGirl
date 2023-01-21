@@ -96,6 +96,17 @@ void update(float dt)
 			rockets.erase(rockets.begin() + i);
 		}
 	}
+
+	for (size_t i = 0; i < rockets.size(); i++) {
+		for (size_t j = 0; j < enemies.size(); j++) {
+			auto rocket = rockets[i];
+			auto enemy = enemies[j];
+			if (checkColision(rocket->getSprite(), enemy->getSprite())) {
+				rockets.erase(rockets.begin() + i);
+				enemies.erase(enemies.begin() + j);
+			}
+		}
+	}
 }
 
 void spawnEnemy()
@@ -124,5 +135,12 @@ void spawnEnemy()
 void shoot()
 {
 	rockets.push_back(std::make_shared<Rocket>("../Assets/graphics/rocket.png", hero->getSprite().getPosition(), 400));
+}
+
+bool checkColision(const sf::Sprite lhs, const sf::Sprite &rhs)
+{
+	auto l = lhs.getGlobalBounds();
+	auto r = rhs.getGlobalBounds();
+	return l.intersects(r);
 }
 
