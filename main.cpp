@@ -12,7 +12,9 @@ int main(int argc, char *argv[])
 		updateInput();
 
 		sf::Time dt = clock.restart();
-		update(dt.asSeconds());
+		if (!gameover) {
+			update(dt.asSeconds());
+		}
 
 		window.clear(sf::Color::Red);
 

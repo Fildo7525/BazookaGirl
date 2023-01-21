@@ -16,6 +16,7 @@
 extern sf::Vector2f viewSize;
 extern sf::VideoMode vm;
 extern sf::RenderWindow window;
+extern bool gameover;
 
 extern sf::Texture skyTexture;
 extern sf::Sprite skySprite;
@@ -29,4 +30,5 @@ void update(float dt);
 void spawnEnemy();
 void shoot();
 bool checkColision(const sf::Sprite lhs, const sf::Sprite &rhs);
+void reset();
 

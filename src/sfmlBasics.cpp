@@ -1,12 +1,21 @@
 #include "sfmlBasics.h"
 
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <cstdlib>
 #include <ctime>
 #include <memory>
+#include <string>
 
 sf::Vector2f viewSize(1024, 768);
 sf::VideoMode vm(viewSize.x, viewSize.y);
 sf::RenderWindow window(vm, "Hello world", sf::Style::Default);
+int score = 0;
+bool gameover = true;
+
+sf::Font headingFont;
+sf::Text heading;
 
 sf::Texture skyTexture;
 sf::Texture bgTexture;
@@ -28,6 +37,15 @@ void init()
 	bgTexture.loadFromFile("../Assets/graphics/bg.png");
 	bgSprite.setTexture(bgTexture);
 
+	headingFont.loadFromFile("../Assets/fonts/Bitstream Vera Sans Mono Nerd Font Complete.ttf");
+	heading.setFont(headingFont);
+	heading.setString("BazookaGirl");
+	heading.setCharacterSize(84);
+	heading.setFillColor(sf::Color::Red);
+	sf::FloatRect headingBounds = heading.getLocalBounds();
+	heading.setOrigin(headingBounds.width/2, headingBounds.height/2);
+	heading.setPosition({viewSize.x/2.f, viewSize.y*0.1f});
+
 	hero = std::make_shared<Hero>("../Assets/graphics/hero.png", sf::Vector2f(viewSize.x* 0.25, viewSize.y *0.5), 200);
 
 	std::srand((int)time(NULL));
@@ -42,6 +60,12 @@ void draw()
 	for(auto enemy : enemies) {
 		window.draw(enemy->getSprite());
 	}
+	if (!gameover) {
+		heading.setString("Score: " + std::to_string(score));
+	} else {
+		heading.setString("BazookaGirl");
+	}
+	window.draw(heading);
 
 	if (rockets.size() > 0) {
 		for(auto rocket : rockets) {
@@ -60,7 +84,13 @@ void updateInput()
 				hero->jump(750);
 			}
 			if (event.key.code == sf::Keyboard::Space) {
-				shoot();
+				if (gameover) {
+					gameover = false;
+					reset();
+				}
+				else {
+					shoot();
+				}
 			}
 		}
 		if (event.type == sf::Event::Closed
@@ -85,6 +115,7 @@ void update(float dt)
 		enemy->update(dt);
 		if (enemy->getSprite().getPosition().x < 0) {
 			enemies.erase(enemies.begin() + i);
+			gameover = true;
 		}
 	}
 
@@ -104,6 +135,7 @@ void update(float dt)
 			if (checkColision(rocket->getSprite(), enemy->getSprite())) {
 				rockets.erase(rockets.begin() + i);
 				enemies.erase(enemies.begin() + j);
+				score += 1;
 			}
 		}
 	}
@@ -142,5 +174,14 @@ bool checkColision(const sf::Sprite lhs, const sf::Sprite &rhs)
 	auto l = lhs.getGlobalBounds();
 	auto r = rhs.getGlobalBounds();
 	return l.intersects(r);
+}
+
+void reset()
+{
+	score = 0;
+	currentTime = 0;
+	prevTime = 0;
+	enemies.clear();
+	rockets.clear();
 }
 
