@@ -1,4 +1,5 @@
 #include "Rocket.hpp"
+#include "Hero.hpp"
 
 Rocket::Rocket(const std::string &textureName, sf::Vector2f position, float velocity)
 	: m_position(position)
@@ -17,7 +18,7 @@ void Rocket::init(const std::string &textureName, sf::Vector2f position)
 
 void Rocket::update(float dt)
 {
-	m_sprite.move(m_velocity * dt, 0);
+	m_sprite.move(m_velocity * dt, -0.5 * gravity * dt * dt);
 }
 
 sf::Sprite Rocket::getSprite()

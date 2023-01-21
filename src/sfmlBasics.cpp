@@ -1,6 +1,7 @@
 #include "sfmlBasics.h"
 
 #include <SFML/Audio/Music.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -31,6 +32,10 @@ float currentTime{};
 float prevTime = 0.0f;
 
 sf::Music bgMusic;
+sf::SoundBuffer fireBuffer;
+sf::SoundBuffer hitBuffer;
+sf::Sound fire(fireBuffer);
+sf::Sound hit(hitBuffer);
 
 void init()
 {
@@ -49,12 +54,17 @@ void init()
 	heading.setOrigin(headingBounds.width/2, headingBounds.height/2);
 	heading.setPosition({viewSize.x/2.f, viewSize.y*0.1f});
 
-	hero = std::make_shared<Hero>("../Assets/graphics/hero.png", sf::Vector2f(viewSize.x* 0.25, viewSize.y *0.5), 200);
+	hero = std::make_shared<Hero>("../Assets/graphics/heroAnim.png", 4, 1.0f, sf::Vector2f(viewSize.x* 0.25, viewSize.y *0.5), 200);
 
 	bgMusic.openFromFile("../Assets/audio/bgMusic.ogg");
 	bgMusic.play();
 	bgMusic.setVolume(30);
 	bgMusic.setLoop(true);
+
+	fireBuffer.loadFromFile("../Assets/audio/fire.ogg");
+	fire.setVolume(40);
+	hitBuffer.loadFromFile("../Assets/audio/hit.ogg");
+	hit.setVolume(40);
 
 	std::srand((int)time(NULL));
 	spawnEnemy();
@@ -143,7 +153,8 @@ void update(float dt)
 			if (checkColision(rocket->getSprite(), enemy->getSprite())) {
 				rockets.erase(rockets.begin() + i);
 				enemies.erase(enemies.begin() + j);
-				score += 1;
+				hit.play();
+				score++;
 			}
 		}
 	}
@@ -175,6 +186,7 @@ void spawnEnemy()
 void shoot()
 {
 	rockets.push_back(std::make_shared<Rocket>("../Assets/graphics/rocket.png", hero->getSprite().getPosition(), 400));
+	fire.play();
 }
 
 bool checkColision(const sf::Sprite lhs, const sf::Sprite &rhs)

@@ -8,7 +8,7 @@ constexpr float gravity = 9.81f;
 class Hero
 {
 public:
-	Hero(const std::string &textureName, sf::Vector2f position, float mass);
+	Hero(const std::string &textureName, int frameCount, float animDuration, sf::Vector2f position, float mass);
 
 	void init(const std::string &textureName, sf::Vector2f position);
 	void update(float dt);
@@ -19,6 +19,10 @@ private:
 	sf::Sprite m_sprite;
 	sf::Vector2f m_position;
 
+	int m_frameCount;
+	float m_animDuration;
+	float m_elapsedTime;
+	sf::Vector2i m_spriteSize;
 	int m_jumpCout;
 	float m_mass;
 	float m_velocity;
