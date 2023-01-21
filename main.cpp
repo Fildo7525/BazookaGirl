@@ -2,14 +2,17 @@
 
 int main(int argc, char *argv[])
 {
+	sf::Clock clock;
+	window.setFramerateLimit(60);
+
 	init();
+
 	while (window.isOpen()) {
 
-		sf::Event event;
-		window.pollEvent(event);
-		if (event.type == sf::Event::Closed) {
-			window.close();
-		}
+		updateInput();
+
+		sf::Time dt = clock.restart();
+		update(dt.asSeconds());
 
 		window.clear(sf::Color::Red);
 

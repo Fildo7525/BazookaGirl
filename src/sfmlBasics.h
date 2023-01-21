@@ -16,6 +16,8 @@ extern sf::Sprite skySprite;
 
 void init();
 void draw();
+void updateInput();
+void update(float dt);
 
 class sfmlBasics
 {
