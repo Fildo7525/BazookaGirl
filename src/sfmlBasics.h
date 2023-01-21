@@ -12,6 +12,7 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Window/WindowStyle.hpp>
+#include <SFML/Audio.hpp>
 
 extern sf::Vector2f viewSize;
 extern sf::VideoMode vm;
